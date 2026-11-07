@@ -46,7 +46,7 @@ def render_register(workspace, index, *, historical=False):
         '<title>Architecture investigation · OtterDesk</title>'
         f'<link rel="stylesheet" href="{prefix}assets/workspace.css">'
         f'<script defer src="{prefix}assets/data-loader.js"></script>'
-        f'<script defer src="{prefix}assets/workspace.js"></script></head><body>'
+        f'<script defer src="{prefix}assets/workspace.js"></script></head><body class="workspace-ui">'
         '<section id="load-data"><h1>Open the review workspace</h1><p id="load-status" role="status"></p>'
         '<label>Open workspace.json and index.json from this snapshot’s data folder '
         '<input id="data-files" type="file" accept=".json,application/json" multiple></label></section>'
