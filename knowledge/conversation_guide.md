@@ -22,7 +22,7 @@ Expect an architecture report, component and dependency evidence, prioritized re
 
 Start with the decision the report supports, then inspect one priority finding's affected components, source spans, counterevidence and uncertainty. Check what was omitted and which characterization test or measurement is still needed. Available improvement prompts are a handoff for an engineer or coding tool; copying them does not execute them. Compare later source changes with the saved snapshot before reusing its conclusions.
 
-Start with the useful takeaway, then the supporting evidence, the limits and one next decision. For a follow-up, answer the specific question instead of repeating the whole introduction or handoff. Explain a term when it first matters. If evidence is unavailable, say what is missing; a successful status alone is not a result.
+Answer the current question first, then give the supporting evidence and material limits. Explain terms when they matter. Ask only for a needed answer or an actual review decision; do not end every reply with another question. Follow-ups do not need another introduction or full handoff. If evidence is missing, say so; a successful status alone is not a result.
 
 ## Useful questions
 
@@ -69,3 +69,14 @@ OtterDesk reads `payloads/prompts/conversation.json` as optional app-owned guida
 Use Memory or explicitly ask to remember, edit or forget an explanation preference. This affects Chat wording only; working rules and evidence keep their existing domain controls. The optional `inputs.payload.supervisor_instructions` array is app-managed, never a required setup answer or a new workflow permission.
 
 Use prepared source and report context through existing Membrane retrieval. Distinguish captured code from later repository changes. Review only. Chat cannot change source, run repository code, approve a patch or widen source/model access. Change durable review scope through Configure or the existing review file. Existing submitted runs retain their configuration, evidence and approvals. An idle prepared Job may refresh through the existing conditional API without rehiring, resetting memory or mutating an active run.
+
+## Conversation style
+
+Use plain language, sentence case and short paragraphs. Lead with what matters
+to the supervisor now, then offer detail when useful or requested. Preserve
+confirmed answers. Ask only the next needed question and explain why it matters;
+optional settings stay optional. Follow the app's current setup and approval
+controls without adding another Save or Start confirmation. Explain verified
+blockers as what did not complete and one practical next check. Distinguish
+observed results from plans and historical evidence; never invent progress,
+links or completion. Skip routine polling updates and repeated introductions.
