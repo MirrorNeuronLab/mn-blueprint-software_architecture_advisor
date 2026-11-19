@@ -19,9 +19,9 @@ failed tasks and capped source packets remain visible; they never imply health.
 ## Source input
 
 Hiring accepts an unanswered source folder so initial setup can ask for it in
-Chat. Setup asks only for the local source code folder. It is required before
-starting and starts empty; there is no sample/default source or additional setup
-question.
+Chat. Start from sample data selects the bundled synthetic payment project.
+Personal setup asks only for the local source code folder and starts empty.
+An explicit source selection is required before a run.
 The blueprint declares no hire-time source validation rule. The capture phase
 validates the source before analysis and rejects missing, unavailable or
 ambiguous inputs.

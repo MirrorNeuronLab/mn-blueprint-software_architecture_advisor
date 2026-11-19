@@ -6,13 +6,18 @@
   },
   "setup_guide": {
     "schema": "otterdesk.setup_guide.v1",
-    "introduction": "I'll map your codebase, explain risky dependencies and propose next steps with source evidence. Choose the source code folder to review. You'll get an architecture report and priorities to inspect; I won't change your code.",
+    "introduction": "Start with the sample payment project to see how its code fits together, or choose your own source folder. I’ll trace dependencies and show which changes deserve a closer look.",
     "sample": {
-      "available": false,
-      "values": {}
+      "available": true,
+      "title": "Sample payment project",
+      "description": "Review the bundled payment project without selecting a repository.",
+      "expected_output": "An architecture review showing dependencies in checkout and the code behind each finding.",
+      "values": {
+        "inputs.payload.input_folder": "@/examples/sample_repository"
+      }
     },
     "real": {
-      "introduction": "Choose the local source code folder. I'll use the configured goal to prepare an architecture review with source evidence, tradeoffs and proposed engineering work.",
+      "introduction": "Choose the source folder for the codebase you want reviewed.",
       "values": {
         "inputs.payload.input_folder": ""
       }
@@ -38,7 +43,12 @@
         "description": "Managed in Memory. Changes Chat wording only; domain work and approvals keep their existing controls."
       }
     ],
-    "prompt_file": "@/payloads/prompts/setup.md"
+    "prompt_file": "@/payloads/prompts/setup.md",
+    "run_guidance": {
+      "on_start": "I’ll capture the source and trace its dependencies so you can check each finding against the code.",
+      "web_ui_ready": "Open the architecture review and follow one priority finding to the files it affects.",
+      "output_ready": "Open reports/report.md in the output folder and check the source evidence for one priority finding."
+    }
   },
   "starter_questions": [
     "What will I learn from an architecture review?",

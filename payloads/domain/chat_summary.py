@@ -14,11 +14,14 @@ def build(workspace, static=None):
     status = ('Static analysis only' if not reviewed and not workspace['terminal'].get('usage', {}).get('catalog_models')
               else 'Review incomplete' if workspace['status'] == 'partial' else 'Review draft')
     highlights = []
+    evidence = {item['id']: item for item in workspace.get('evidence', [])}
     findings = sorted(workspace['findings'], key=lambda row: row['status'] != 'supported')
     for finding in findings[:2]:
+        source = next((evidence[key] for key in finding.get('evidence_ids', []) if key in evidence), None)
+        locator = f"Source {source['path']}, lines {source['start_line']}–{source['end_line']}. " if source else ''
         highlights.append({'title': _text(finding['statement'], 180),
             'detail': _text(f"{finding['status'].replace('_', ' ').capitalize()} · "
-                f"{finding['confidence']} confidence. {finding.get('next_decision', '')}", 320)})
+                f"{finding['confidence']} confidence. {locator}{finding.get('next_decision', '')}", 320)})
     cycles = static['cycles'] if static is not None else workspace['cycles']
     if cycles:
         cycle = sorted(cycles, key=lambda row: (-len(row), row))[0]

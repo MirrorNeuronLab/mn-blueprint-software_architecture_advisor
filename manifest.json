@@ -4,7 +4,7 @@
   "name": "Architecture Advisor",
   "tagline": "Map software structure, risks, and improvement priorities",
   "payload_api": "mn.blueprint.v1",
-  "version": "7.1.0",
+  "version": "7.1.1",
   "description": "Understand how your software is organized, where changes may cause problems, and what to improve first. Get a report with supporting examples, an interactive overview, and suggested tasks for your development team.",
   "workflow": "workflow.json",
   "execution": "execution.json",

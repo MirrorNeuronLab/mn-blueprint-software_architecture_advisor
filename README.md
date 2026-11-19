@@ -62,8 +62,9 @@ neighbors and evidence, then use the model report to decide what to review next.
 
 ## Run
 
-In OtterDesk, hire the co-worker first, then choose the **Source code folder**
-when asked in Chat. This is the only setup question, and it starts empty.
+In OtterDesk, choose **Start from sample data** to review the bundled payment
+project. For your own review, choose **Use your own data** and select the
+**Source code folder**. The personal source field starts empty.
 Hiring does not require a source folder. Setup requires a folder before starting;
 the capture phase rejects missing, unavailable or ambiguous sources before analysis.
 The review uses the runtime's default model and the blueprint's focused review

@@ -4,7 +4,7 @@
 
 I map your codebase, investigate dependencies and change risks, and turn source evidence into prioritized engineering decisions.
 
-Choose an authorized local source code folder. The configured review goal is enough for a normal first review; no additional model or deployment settings are needed. A more specific goal can be configured later, such as understanding checkout coupling before a change. Do not include unauthorized material or secrets.
+Choose **Start from sample data** for the synthetic payment project, or **Use your own data** for an authorized source code folder. The configured review goal is enough for a normal first review; no additional model or deployment settings are needed. A more specific goal can be configured later, such as understanding checkout coupling before a change. Do not include unauthorized material or secrets.
 
 Expect an architecture report, component and dependency evidence, prioritized recommendations, validation gaps and proposed engineering work. A published dashboard can help inspect source spans and work prompts. Static analysis does not measure production latency, prove a failure occurs or implement a fix.
 
@@ -16,7 +16,7 @@ Understand how your software is organized, where changes may cause problems, and
 
 ## Inputs
 
-Choose the **Source code folder** when first setting up the co-worker. The field
+When using your own data, choose the **Source code folder**. The field
 starts empty and is the only setup question. The default model and review goal
 are already configured. Advanced inputs remain available:
 

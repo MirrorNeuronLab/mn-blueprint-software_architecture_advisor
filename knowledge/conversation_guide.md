@@ -12,7 +12,7 @@ Choose an authorized local source code folder. The configured review goal is eno
 
 ## Try a sample or a walkthrough
 
-For a small walkthrough, select the bundled examples/sample_repository folder through the normal source-folder control. It is a synthetic payment system, not production evidence. There is no sample button and no default source folder. The trial follows normal review preparation; it is not an instant canned report.
+Choose **Start from sample data** to review the bundled synthetic payment project. The review uses the usual model and prepares a fresh report. Open a finding and follow it to the checkout code. To review your own project, choose **Use your own data** and select its folder.
 
 ## What you can expect
 
