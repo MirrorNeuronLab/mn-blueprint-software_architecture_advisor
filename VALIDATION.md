@@ -1,5 +1,23 @@
 # Architecture Advisor 3.7 validation — 2026-10-08
 
+## Python dependency evidence in 7.2.0
+
+The bundled payments project contains seven Python files and five local import
+edges. The previous file map resolved two edges and attributed the refunds
+import to the package initializer. The updated file map resolves all five.
+Checkout, the controller and refunds depend on the payment service. The service
+depends on the ledger and notifications.
+
+The compiled offline regression checks the dependency matrix, exact import
+spans, committed Git frame, score method, Markdown brief and Chat summary.
+A single captured revision is identified as a baseline for future comparison.
+The regression runs the same package under both `src` and `packages/python`, using the real
+analysis and reporting skills with an RGX transport test double. The skill
+regressions also check ambiguous names, relative imports and rebinding in Git
+history when a package member moves into a file.
+An additional compiled review checks that imports in Python type stubs can
+refer to paired implementations and stub-only packages in both dependency views.
+
 ## Decision-first reports and coding handoffs
 
 - Advisor/manifest regression suite: **125 passed, 34 skipped**. The skips retain

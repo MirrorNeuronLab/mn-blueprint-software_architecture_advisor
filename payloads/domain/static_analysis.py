@@ -21,6 +21,7 @@ def build(block, snapshot=None):
     store = CatalogStore(block.store.run_dir)
     cfg = block.original_config['ingest']
     facts = analyze_sources({p: s['text'] for p,s in snapshot['sources'].items()},
+        python_source_roots=cfg['source_roots'],
         max_files=cfg['max_files'], max_file_bytes=cfg['max_file_bytes'], max_total_bytes=cfg['max_total_bytes'])
     facts['snapshot_id'] = snapshot['snapshot_id']
     manifest = snapshot['manifest']
@@ -29,6 +30,7 @@ def build(block, snapshot=None):
     if repository:
         try:
             history = analyze_history(repository, snapshot['inventory'], revision=manifest.get('git_anchor'),
+                python_source_roots=cfg['source_roots'],
                 max_commits=min(settings.get('history_commits', 80), cfg['git_commits']),
                 timeout_seconds=settings.get('history_timeout_seconds', 30), max_file_bytes=cfg['max_file_bytes'],
                 include_historical_paths=True, exclude_parts=cfg.get('exclude', []))

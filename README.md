@@ -60,6 +60,14 @@ function version changes, call-name changes and functions that changed together.
 Start with highly connected or frequently changed functions, inspect their
 neighbors and evidence, then use the model report to decide what to review next.
 
+The code map brief names a shared interface and shows which files to inspect
+before changing it. In the bundled payments example, checkout, the controller
+and refunds all import the payment service. The service imports the ledger and
+notifications. Each reference includes its source line. Chat can show the first
+of these checks on a static-only run. For Python projects with a different
+layout, configure `ingest.source_roots` to use the same roots for the file map,
+dependency matrix and Git history.
+
 ## Run
 
 In OtterDesk, choose **Start from sample data** to review the bundled payment
@@ -843,7 +851,7 @@ those 30 points stay unassessed. The scoring API accepts caller-declared complet
 passed/total measurements with captured source hashes/spans; conformance also
 requires approved rule IDs. It validates provenance, not the truth of a declared
 measurement. Compare only the same repository, scope, extractor and score model.
-`syntax-3` changes the method identity so earlier extractor results do not appear
+`syntax-4` changes the method identity so earlier extractor results do not appear
 comparable by accident. The score uses no model calls and does not execute code.
 
 ## Gap to commercial products (reviewed 2026-10-18)

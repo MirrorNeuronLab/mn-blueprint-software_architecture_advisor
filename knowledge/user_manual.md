@@ -40,6 +40,11 @@ graph states and plots codebase growth. Compare a baseline to inspect added,
 removed and modified definitions and call candidates. Size, churn and graph
 connectivity guide inspection; they do not establish defects.
 
+Before changing a shared interface, open the code map brief. It names the file
+with the most direct dependents and gives source lines for up to five files to
+check. In the bundled payments example, start with the imports in checkout,
+the controller and refunds before changing the payment service.
+
 Data is in `data/`, Markdown in `reports/`, and rendering in `web/`. HTTP previews load sibling data automatically. Direct local or desktop static
 HTML views use the explicit JSON file picker. Rerun the same Job or use its existing schedule to
 retain growth measurements and graphs across reviews. This reflects capture

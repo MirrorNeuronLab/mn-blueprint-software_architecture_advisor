@@ -1,5 +1,7 @@
 """Bounded Chat presentation of the same saved workspace used by the report."""
 
+from .change_impact import direct_dependents
+
 
 def _text(value, maximum):
     text = ' '.join(str(value or '').split())
@@ -28,6 +30,12 @@ def build(workspace, static=None):
         highlights.append({'title': 'Review the dependency cycle',
             'detail': _text(f"{len(cycle)} {'files' if static is not None else 'modules'} participate, including {cycle[0]}. "
                 'This is an investigation candidate; a cycle alone does not establish a defect.', 320)})
+    elif not highlights and (impact := direct_dependents(static or {})):
+        site = impact['sites'][0]
+        noun = 'file' if impact['total'] == 1 else 'files'
+        highlights.append({'title': 'Review direct dependents',
+            'detail': _text(f"Before changing {impact['target']}, check the {impact['total']} referring {noun}. "
+                f"Start at {site['source']}, line {site['line']}.", 320)})
     elif not highlights:
         highlights.append({'title': 'Review the captured scope',
             'detail': 'No supported finding or dependency cycle was recorded. Missing evidence does not establish architectural health.'})

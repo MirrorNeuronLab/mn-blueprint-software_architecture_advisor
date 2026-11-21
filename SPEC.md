@@ -1,4 +1,4 @@
-# Architecture Advisor 7.1.0 specification
+# Architecture Advisor 7.2.0 specification
 
 Local runtime models require at least one GPU with 49,152 MB of GPU memory.
 When the selected review model is a registered remote API provider (including
@@ -49,9 +49,20 @@ validated source suffixes, excluding documents/data. Capture records the
 effective suffix catalog and uncaptured suffix counts. Scope comparison includes
 that effective catalog. Capturing a format does not imply semantic support.
 
+Python import edges in the dependency matrix, file map and committed history use
+the same captured-file resolver and `ingest.source_roots`. A named import can
+point to a captured submodule. Relative imports stay inside the source root
+that owns the importing file. Ambiguous and external targets stay unresolved.
+Type stubs participate as sources and as targets for modules that have only a stub.
+Imports of a module with a paired implementation cite the implementation file.
+The static extractor records `syntax-4` so growth comparisons detect the change
+of method. The Markdown code map lists up to five direct dependents of the file
+with the most referring files, with one source location per dependent. This
+also supplies a Chat review action when no finding or dependency cycle leads.
+
 The declared BEAM source-analysis skill supplies pinned offline
 Tree-sitter parsers for literal Elixir/Erlang modules and syntax dependency
-candidates. Python imports retain their existing collector. Source hashes and
+candidates. Source hashes and
 exact line spans link each accepted internal edge to frozen code. Syntax-error
 files produce warnings and no extracted facts; missing parsers and violated
 budgets fail explicitly. Macros, generated modules, preprocessing, dynamic

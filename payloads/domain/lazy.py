@@ -15,7 +15,7 @@ from .records import Records, add_export
 from . import static_layers as static
 from . import derived_layers as derived
 
-COLLECTOR_VERSION = "multi-graph/4-static-code"
+COLLECTOR_VERSION = "multi-graph/5-python-imports"
 
 
 class LayerManager:
@@ -234,7 +234,8 @@ class LayerManager:
     def _collect(self, records, layer, scope, known_edges):
         needs_project = layer in {"symbols", "dependencies", "calls", "types", "state", "control_flow", "data_flow", "api", "events", "tests", "configuration", "security"}
         if needs_project and self.project is None:
-            self.project = static.Project(self.sources, self.manifest["modules"])
+            self.project = static.Project(self.sources, self.manifest["modules"],
+                                          python_source_roots=self.manifest["ingest_config"]["source_roots"])
         if needs_project and layer != "dependencies" and self.project.beam["modules"]:
             records.details["limitations"].append("Automatic Elixir/Erlang extraction covers module dependencies only; this layer's syntax collector is Python-only.")
         if layer in {"symbols", "dependencies", "calls", "types", "state"}:

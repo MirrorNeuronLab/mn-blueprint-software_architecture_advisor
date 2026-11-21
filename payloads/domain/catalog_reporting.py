@@ -452,10 +452,12 @@ def _static_executive(store, coverage, results, plan):
     frames = history.get('timeline', {}).get('frames', [])
     text = (f"Static analysis extracted {len(facts['functions'])} named functions across {facts['coverage']['files']} captured files "
             f"and {len(facts['component_edges'])} file dependency pairs by kind. ")
-    if frames:
+    if len(frames) > 1:
         a, b = frames[0]['metrics'], frames[-1]['metrics']
         text += (f"Across {len(frames)} committed graph states, supported source files changed from {a['files']} to {b['files']}, "
                  f"extracted functions from {a['functions']} to {b['functions']}, and call candidate pairs from {a['call_pairs']} to {b['call_pairs']}. ")
+    elif frames:
+        text += "Git history contains one captured revision. A second revision is needed to measure change. "
     return text + prefix + 'Use the component map and growth timeline to scope the next source review; these counts do not establish defects or semantic behavior changes.'
 
 

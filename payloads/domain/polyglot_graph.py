@@ -22,6 +22,9 @@ def symbols(records, project):
 def dependencies(records, project):
     paths = {info['path']: name for name,info in project.modules.items()}
     for edge in project.polyglot['component_evidence']:
+        # Stub imports use the full Python inventory, including paired implementations.
+        if edge['kind'] == 'import' and edge['source'].endswith('.pyi'):
+            continue
         if edge['source'] not in paths or edge['target'] not in paths:
             continue
         loc = edge['evidence']

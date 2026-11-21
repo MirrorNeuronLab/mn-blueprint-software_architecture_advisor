@@ -4,6 +4,7 @@ import hashlib
 from pathlib import Path
 import re
 from mn_web_report_skill import asset_bytes, write_assets
+from .change_impact import direct_dependents
 
 
 def _code(value):
@@ -18,12 +19,19 @@ def brief(facts, history):
         '[Open the interactive code map](../web/code-map.html) · [Static graph data](../data/static-code.json) · [Function history data](../data/function-evolution.json)', '',
         f"Captured {c['files']} files; extracted {len(facts['functions'])} functions and {len(facts['component_edges'])} file dependency edges with zero model calls.",
         f"Parser coverage: {c['status_counts']}. Unresolved call sites: {c['unresolved_calls']}.", '',
-        'Components below are source files. The interactive views show file and function relationships. Calls are syntax/name candidates; include and call edges remain separate.', '',
+        'Components below are source files. Each dependency site identifies an import, an include or a possible function call in the captured source.', '',
         '## Where to inspect first', '', '| Component | Direct dependents | Direct dependencies | Functions |', '| --- | ---: | ---: | ---: |']
     for row in sorted(facts['components'], key=lambda r:(-r['fan_in']-r['fan_out'],r['id']))[:12]:
         lines.append(f"| {_code(row['id'])} | {row['fan_in']} | {row['fan_out']} | {row['functions']} |")
-    lines += ['', 'Use the map to inspect edge evidence, direct callers/callees and source locations before deciding whether a boundary needs to change.', '',
-              '## Function development over time', '', f"History status: {history['status']}. Anchor: `{history.get('revision','unavailable')}`.",
+    impact = direct_dependents(facts)
+    if impact:
+        lines += ['', '## Before changing a shared interface', '',
+                  f"{_code(impact['target'])} has the most direct dependents in this capture. "
+                  f"Inspect these references before changing its interface ({len(impact['sites'])} of {impact['total']} files shown).", '']
+        for site in impact['sites']:
+            kind = 'call candidate' if site['kind'] == 'call' else site['kind']
+            lines.append(f"- {_code(site['source'] + ':' + str(site['line']))} ({kind})")
+    lines += ['', '## Function development over time', '', f"History status: {history['status']}. Anchor: `{history.get('revision','unavailable')}`.",
               f"Observed {len(history['events'])} function changes in {h.get('commits_with_file_diffs','unavailable')} first-parent commits; the configured window is {h.get('commit_limit','unavailable')} commits.", '',
               '| Function | Observed changes |', '| --- | ---: |']
     for row in history['hotspots'][:12]:

@@ -3,6 +3,8 @@ import ast
 import re
 from pathlib import Path
 from mn_beam_analysis_skill import analyze_sources
+from mn_static_code_analysis_skill import PythonImportIndex
+from .ingest import module_name
 
 
 def body_nodes(body):
@@ -21,8 +23,13 @@ def expression_nodes(item):
 
 
 class Project:
-    def __init__(self, sources, modules):
+    def __init__(self, sources, modules, *, python_source_roots=(".",)):
         self.sources, self.modules = sources, modules
+        self.python_imports = PythonImportIndex(sources, source_roots=python_source_roots)
+        self.python_modules = {
+            path: module_name(path, python_source_roots) if path.endswith(".py") else path
+            for path in sources if path.endswith((".py", ".pyi"))
+        }
         self.trees, self.defs, self.aliases, self.errors = {}, {}, {}, []
         self.beam = analyze_sources({path: source["text"] for path, source in sources.items()})
         from .polyglot_graph import facts
@@ -119,28 +126,38 @@ def symbols(records, project):
     records.details.update(parsed_python_modules=len(project.trees), warnings=project.errors)
 
 
+def python_import_sites(project):
+    for module, tree in project.trees.items():
+        for item in ast.walk(tree):
+            if isinstance(item, ast.Import):
+                for alias in item.names:
+                    yield module, alias.name, None, item.lineno, item.end_lineno
+            elif isinstance(item, ast.ImportFrom):
+                base = "." * item.level + (item.module or "")
+                for alias in item.names:
+                    member = None if alias.name == "*" else alias.name
+                    yield module, base, member, item.lineno, item.end_lineno
+    # The file collector parses stubs and identifies their modules by path.
+    for ref in project.polyglot.get("imports", []):
+        if ref["style"] == "python":
+            loc = ref["evidence"]
+            yield ref["source"], ref["module"], ref.get("member"), loc["line_start"], loc["line_end"]
+
+
 def dependencies(records, project):
     from .polyglot_graph import dependencies as polyglot_dependencies
     polyglot_dependencies(records, project)
     unresolved = []
-    for module, tree in project.trees.items():
-        for item in ast.walk(tree):
-            names = []
-            if isinstance(item, ast.Import):
-                names = [a.name for a in item.names]
-            elif isinstance(item, ast.ImportFrom):
-                package = module if Path(project.modules[module]["path"]).stem == "__init__" else module.rpartition(".")[0]
-                bits = package.split(".") if package else []
-                prefix = bits[:len(bits)-item.level+1] if item.level and item.level <= len(bits) else []
-                base = ".".join(prefix + ([item.module] if item.module else [])) if item.level else item.module or ""
-                names = [(base + "." + a.name).strip(".") if a.name != "*" else base for a in item.names]
-            for imported in names:
-                target = imported if imported in project.modules else imported.rpartition(".")[0]
-                if target in project.modules and target != module:
-                    eid = records.cite(project.modules[module]["path"], item.lineno, item.end_lineno, detail=f"static import {imported}")
-                    records.edge("module:" + module, "module:" + target, "DEPENDS_ON", eid)
-                elif target not in project.modules:
-                    unresolved.append({"module": module, "import": imported, "line": item.lineno})
+    for module, base, member, line, end_line in python_import_sites(project):
+        path = project.modules[module]["path"]
+        candidates = project.python_imports.candidates(path, base, member)
+        if len(candidates) != 1:
+            imported = f"from {base} import {member}" if member else base
+            unresolved.append({"module": module, "import": imported, "line": line})
+        elif candidates[0] != path:
+            target = project.python_modules[candidates[0]]
+            eid = records.cite(path, line, end_line, detail=f"static import of {target}")
+            records.edge("module:" + module, "module:" + target, "DEPENDS_ON", eid)
     for reference in project.beam["dependencies"]:
         source, target = reference["source"], reference["target"]
         if source not in project.modules or target not in project.modules:
